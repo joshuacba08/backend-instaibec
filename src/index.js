@@ -17,10 +17,10 @@ app.use(express.json());
 app.post("/auth/register", async (req, res) => {
   try {
 
-    const newUser = await User.create(req.body);
+    const newUser = await User.create(req.body); // Creamos el usuario en la base de datos
     console.log(newUser);
 
-    return res.status(201).json({
+    return res.status(201).json({ // 201 para indicar que se ha creado correctamente
       ok: true,
       msg: "Usuario creado correctamente",
       data: newUser,

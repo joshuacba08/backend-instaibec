@@ -1,6 +1,9 @@
 const express = require("express");
 const Container = require("./services/container");
-const sequelize = require("./config/sequelize");
+const { connectToDB } = require("./config/sequelize");
+const { User } = require("./models/db");
+
+connectToDB(); // Conectamos a la base de datos
 const container = new Container();
 
 const app = express();
@@ -11,12 +14,26 @@ app.use(express.json());
 // Crear una ruta de tipo POST para registrar un usuario en el archivo users.json
 // http://localhost:8080/auth/register
 
-app.post("/auth/register", (req, res) => {
-  container.createFile(req.body);
-  res.json({
-    msg: "Register ok",
-    user: req.body.email,
-  });
+app.post("/auth/register", async (req, res) => {
+  try {
+
+    const newUser = await User.create(req.body);
+    console.log(newUser);
+
+    return res.status(201).json({
+      ok: true,
+      msg: "Usuario creado correctamente",
+      data: newUser,
+    })
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al crear el usuario",
+      data: null,
+    });
+  }
 });
 
 app.post("/auth/login", async (req, res) => {

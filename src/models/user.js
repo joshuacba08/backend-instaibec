@@ -33,6 +33,11 @@ User.init({ // init es un método estático de Model
         allowNull: false,
         unique: true,
     },
+    role:{
+        type: Sequelize.STRING(20),
+        allowNull: false,
+        defaultValue: 'USER_ROLE',
+    }
 }, {
     sequelize, // Indicamos la conexión que vamos a utilizar
     modelName: 'user', // Definimos el nombre del modelo

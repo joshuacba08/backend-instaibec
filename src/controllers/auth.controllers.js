@@ -4,7 +4,6 @@ const { User } = require("../models/db"); // Importamos el modelo User
 
 const createUser = async (req, res) => {
   try {
-
     // Encriptamos la contraseña
     const salt = bcrypt.genSaltSync(10); // Generamos el salt
     // Nota: salt es un valor aleatorio que se agrega a la contraseña para que el hash sea más seguro
@@ -33,30 +32,55 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  console.log("body: ", req.body);
+  try {
+    // 1. Buscamos el usuario en la base de datos
+    const user = await User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
 
-  const user = await container.readFile();
+    // Si no existe el usuario
+    if(!user){
+        return res.status(400).json({
+            ok: false,
+            msg: 'El usuario no existe',
+            data: null
+        });
+    }
 
-  if (user.email !== req.body.email) {
-    return res.status(404).json({
+    // 2. Comparamos la contraseña
+    const validPassword = bcrypt.compareSync(req.body.password, user.password); // Comparamos la contraseña
+
+    // Si la contraseña no es válida
+    if(!validPassword){
+        return res.status(400).json({
+            ok: false,
+            msg: 'Contraseña incorrecta',
+            data: null
+        });
+    }
+
+    // 3. Generamos el token  TODO: Generar el token
+
+    // 4. Devolvemos los datos del usuario
+    user.password = undefined; // Eliminamos el campo password
+
+    return res.status(200).json({
+        ok: true,
+        msg: 'Inicio de sesión correcto',
+        data: user
+    });
+
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
       ok: false,
-      msg: "Email incorrecto",
+      msg: "Error al iniciar sesión",
+      data: null,
     });
   }
-
-  // status for credentials incorrect or correct
-
-  if (user.password !== req.body.password) {
-    return res.status(401).json({
-      ok: false,
-      msg: "Password incorrecto",
-    });
-  }
-
-  return res.json({
-    ok: true,
-    msg: "Se ha logueado correctamente",
-  });
 };
 
 module.exports = {

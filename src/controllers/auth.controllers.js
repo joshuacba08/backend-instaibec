@@ -77,13 +77,13 @@ const loginUser = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       ok: false,
-      msg: "Error al iniciar sesión",
+      msg: "Error en el servidor",
       data: null,
     });
   }
 };
 
-module.exports = {
+module.exports = { // exportamos las funciones controladoras para poder usarlas en otros archivos
   createUser,
   loginUser,
 };

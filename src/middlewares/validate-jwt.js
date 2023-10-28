@@ -33,7 +33,7 @@ const validateJWT = async (req, res, next) => {
             });
         }
 
-        req.user = payload; // Guardamos el payload en el request
+        req.body.user = payload; // Guardamos el payload en el request
 
         next(); // Pasamos al siguiente middleware o controllador
     } catch (error) {

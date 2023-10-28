@@ -26,7 +26,13 @@ const createPost = async (req, res) => {
 const getPosts = async (req, res) => {
     try{
 
-        const posts = await Post.findAll(); // SELECT * FROM posts  obtiene todos los posts de la base de datos
+        const { user } = req.body;
+
+        const posts = await Post.findAll({
+            where: {
+                userId: user.id
+            }
+        }); // SELECT * FROM posts  obtiene todos los posts de la base de datos
 
         return res.status(200).json({
             ok: true,

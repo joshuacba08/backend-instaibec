@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config(); // Importamos dotenv para poder acceder a las variables de entorno
 const Container = require("./services/container");
 const { connectToDB } = require("./config/sequelize");
 

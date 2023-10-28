@@ -1,6 +1,7 @@
 const { response } = require("express");
 const bcrypt = require("bcryptjs");
 const { User } = require("../models/db"); // Importamos el modelo User
+const { generateJWT } = require("../config/jwt");
 
 const createUser = async (req, res) => {
   try {
@@ -61,15 +62,17 @@ const loginUser = async (req, res) => {
         });
     }
 
-    // 3. Generamos el token  TODO: Generar el token
-
-    // 4. Devolvemos los datos del usuario
+    // 3. Devolvemos los datos del usuario
     user.password = undefined; // Eliminamos el campo password
+
+    // 4. Generamos el token  TODO: Generar el token
+    const token = generateJWT(user.toJSON()); // Generamos el token
 
     return res.status(200).json({
         ok: true,
         msg: 'Inicio de sesión correcto',
-        data: user
+        data: user,
+        token
     });
 
 

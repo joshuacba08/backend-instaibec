@@ -55,17 +55,11 @@ const updatePost = async (req, res) => {
             where: {id}
         });
 
-        if(!updatedPost){
+        if(updatedPost[0] === 0){
             return res.status(404).json({
                 ok: false,
-                msg: 'No se encontró el post'
-            })
-        }
-
-        if(updatedPost[0] === 0){
-            return res.status(400).json({
-                ok: false,
-                msg: 'No se pudo actualizar el post ya que la propiedad no existe'
+                msg: 'El post o la propiedad no existe',
+                data: updatedPost
             })
         }
 
